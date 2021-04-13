@@ -1,0 +1,16 @@
+
+
+
+client: the high level client that interacts with the server through a tcp connection using its tcp socket
+server: the high level server that serves the clients' requests through a high level dispatcher (invoke_operation_handler) which invokes the correct handler based on the command (similar to the command design pattern)
+dispatchers: has the 2 main dispatchers, the clientSide dispatcher (send_request), and the ServerSide dispatcher (invoke_operation_handler). Both of which first prepare the message (request, response) through a bytearray buffer then dispatch a handler with the needed data (filename, commands...) depending on the operation (put, get...)
+lookupTable: has a dictionary of clientSide handlers for each command
+clientHandlers: implementation for the clientSide handlers in lookupTable where each one has access to the clientSide socket and sends its custom data provided by the dispatcher (each one creates its own buffer and fills it according to the project specifications)
+serverHandlers: implementation for the serverSide handlers which work similarly to the clientSide handlers but take care of the Server response side and are provided with custom prepared data from the serverSide dispatcher.
+constants: has global settings such as a directory to store uploaded files (solves the trivial problem where the user uploads the server/client programs ;D), string templating for custom messages.
+bufferCreation: facilitates buffer creation for the get request/response and the successful change request reducing the chance of sneaky bit mistakes
+responseHandlers: handlers for the get and help functions aimed at being used after the client receives the server's response (to parse the help commands list which relies on the opcode -> command mapping protocol , cleaning up the messy get part so the client code is cleaner)
+files directory: stores all files uploaded through this FTP service
+
+
+
